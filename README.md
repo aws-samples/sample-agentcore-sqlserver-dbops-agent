@@ -92,10 +92,15 @@ agentcore invoke '{"prompt": "Check for deadlocks in the last 24 hours, provide 
 
 ## Adding memory (optional)
 
-AgentCore Memory lets the agent retain findings across sessions. Create a memory resource, then use `agent_with_memory.py` instead of `agent.py`.
+AgentCore Memory lets the agent retain findings across sessions using two strategies:
+
+- **Semantic memory** (`dbops_facts`) — stores and retrieves factual findings (e.g., "Table X had 12 deadlocks last week") using vector similarity search
+- **Summary memory** (`dbops_summaries`) — stores conversation summaries per session so the agent can recall what was discussed previously
+
+The agent dynamically fetches strategy IDs at startup via `MemoryClient.get_memory_strategies()` and configures retrieval thresholds (`top_k`, `relevance_score`) for each. Memory is scoped per session and actor, and the session manager runs as a context manager to ensure events are flushed.
 
 ```bash
-# Create memory resource
+# Create memory resource with both strategies
 agentcore memory create dbops_shared_memory \
   --strategies '[{"semanticMemoryStrategy": {"name": "dbops_facts"}}, {"summaryMemoryStrategy": {"name": "dbops_summaries"}}]' \
   --event-expiry-days 30 \
@@ -121,6 +126,8 @@ agentcore deploy \
   --env AGENTCORE_MEMORY_ID=$AGENTCORE_MEMORY_ID \
   --env AGENT_OBSERVABILITY_ENABLED=true
 ```
+
+If `AGENTCORE_MEMORY_ID` is not set, the agent falls back to stateless mode (same behavior as `agent.py`).
 
 ## Testing with a simulated deadlock
 
