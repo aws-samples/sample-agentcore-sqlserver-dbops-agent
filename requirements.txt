@@ -1,0 +1,5 @@
+bedrock-agentcore
+strands-agents[otel]
+pymssql
+boto3
+aws-opentelemetry-distro~=0.12.1
