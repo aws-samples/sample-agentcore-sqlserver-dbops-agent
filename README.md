@@ -26,6 +26,19 @@ An AI-powered SQL Server database operations agent built with [Strands Agents](h
 
 - **Amazon Bedrock** foundation model access enabled in your region → `AWS_REGION`
 - An **IAM execution role** with permissions for Bedrock, Secrets Manager, SNS, and CloudWatch Logs ([permissions guide](https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/runtime-permissions.html)) → `AGENTCORE_ROLE_ARN`
+
+  Create the role using the included least-privilege policies. Replace `<region>`, `<account-id>`, `<your-secret-name>`, and `<your-topic-name>` in `agentcore-execution-role-policy.json` with your values, then run:
+
+  ```bash
+  aws iam create-role \
+    --role-name AgentCoreDBOpsRole \
+    --assume-role-policy-document file://agentcore-execution-role-trust-policy.json
+
+  aws iam put-role-policy \
+    --role-name AgentCoreDBOpsRole \
+    --policy-name AgentCoreDBOpsPolicy \
+    --policy-document file://agentcore-execution-role-policy.json
+  ```
 - A **VPC** with private subnets and a security group allowing outbound traffic to RDS on port 1433 → `SUBNET1`, `SUBNET2`, `SECURITY_GROUP_ID`
 
 ### Development environment
@@ -172,12 +185,14 @@ Deploy with `AGENT_OBSERVABILITY_ENABLED=true` and include `aws-opentelemetry-di
 ## Project structure
 
 ```
-├── agent.py                 # Main agent with all tools
-├── agent_with_memory.py     # Agent with AgentCore Memory integration
-├── requirements.txt         # Python dependencies
-├── LICENSE                  # MIT-0 License
-├── NOTICE                   # Copyright notice
-├── THIRD-PARTY-LICENSES     # Third-party dependency licenses
+├── agent.py                              # Main agent with all tools
+├── agent_with_memory.py                  # Agent with AgentCore Memory integration
+├── requirements.txt                      # Python dependencies
+├── agentcore-execution-role-policy.json  # Least-privilege IAM policy
+├── agentcore-execution-role-trust-policy.json  # Trust policy for AgentCore
+├── LICENSE                               # MIT-0 License
+├── NOTICE                                # Copyright notice
+├── THIRD-PARTY-LICENSES                  # Third-party dependency licenses
 └── README.md
 ```
 
