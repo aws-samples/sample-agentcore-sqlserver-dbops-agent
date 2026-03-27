@@ -1,0 +1,24 @@
+Third-Party Licenses
+====================
+
+This project includes the following third-party dependencies:
+
+** strands-agents — https://github.com/strands-agents/sdk-python
+License: Apache License 2.0
+https://www.apache.org/licenses/LICENSE-2.0
+
+** bedrock-agentcore — https://pypi.org/project/bedrock-agentcore/
+License: Apache License 2.0
+https://www.apache.org/licenses/LICENSE-2.0
+
+** boto3 — https://github.com/boto/boto3
+License: Apache License 2.0
+https://www.apache.org/licenses/LICENSE-2.0
+
+** pymssql — https://github.com/pymssql/pymssql
+License: GNU Lesser General Public License v2.1 (LGPL-2.1)
+https://www.gnu.org/licenses/old-licenses/lgpl-2.1.html
+
+** aws-opentelemetry-distro — https://github.com/aws-observability/aws-otel-python-instrumentation
+License: Apache License 2.0
+https://www.apache.org/licenses/LICENSE-2.0

@@ -17,8 +17,8 @@ An AI-powered SQL Server database operations agent built with [Strands Agents](h
 - **Python** 3.10+
 - **AWS CLI** configured with appropriate permissions
 - **Amazon RDS for SQL Server** (Standard or Enterprise Edition)
-  - Trace flags 1204 and 1222 enabled via a custom DB parameter group ([setup guide](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Appendix.SQLServer.CommonDBATasks.Deadlocks.html))
-  - *(Optional)* Custom XE session for `blocked_process_report` for historical blocking ([setup guide](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Appendix.SQLServer.CommonDBATasks.ExtendedEvents.html))
+  - Trace flags 1204 and 1222 enabled via a custom DB parameter group ([setup guide](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Appendix.SQLServer.CommonDBATasks.Deadlocks.html)) — see also [Monitor deadlocks in Amazon RDS for SQL Server and set notifications using Amazon CloudWatch](https://aws.amazon.com/blogs/database/monitor-deadlocks-in-amazon-rds-for-sql-server-and-set-notifications-using-amazon-cloudwatch/)
+  - *(Optional)* Custom XE session for `blocked_process_report` for historical blocking ([Extended Events](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/SQLServer.ExtendedEvents.html))
 - **AWS Secrets Manager** secret containing database credentials (`host`, `username`, `password`, `port`)
 - **Amazon SNS** topic with an active subscription
 - **Amazon Bedrock** foundation model access enabled in your region
