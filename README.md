@@ -30,7 +30,7 @@ An AI-powered SQL Server database operations agent built with [Strands Agents](h
 
 ### Development environment
 
-- **Python** 3.10+
+- **Python** 3.10+ (macOS, Linux, or Windows)
 - **AWS CLI** configured with appropriate permissions
 
 ## Quick start
