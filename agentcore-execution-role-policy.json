@@ -14,7 +14,7 @@
       "Sid": "SecretsManagerRead",
       "Effect": "Allow",
       "Action": "secretsmanager:GetSecretValue",
-      "Resource": "arn:aws:secretsmanager:<region>:<account-id>:secret:<your-secret-name>*"
+      "Resource": "arn:aws:secretsmanager:${AWS_REGION}:${AWS_ACCOUNT_ID}:secret:${DB_SECRET_ID}*"
     },
     {
       "Sid": "SNSPublish",
@@ -23,7 +23,7 @@
         "sns:ListTopics",
         "sns:Publish"
       ],
-      "Resource": "arn:aws:sns:<region>:<account-id>:<your-topic-name>"
+      "Resource": "arn:aws:sns:${AWS_REGION}:${AWS_ACCOUNT_ID}:${SNS_TOPIC_NAME}"
     },
     {
       "Sid": "CloudWatchLogs",
@@ -33,7 +33,7 @@
         "logs:CreateLogStream",
         "logs:PutLogEvents"
       ],
-      "Resource": "arn:aws:logs:<region>:<account-id>:log-group:/aws/bedrock-agentcore/*"
+      "Resource": "arn:aws:logs:${AWS_REGION}:${AWS_ACCOUNT_ID}:log-group:/aws/bedrock-agentcore/*"
     },
     {
       "Sid": "XRayTracing",

@@ -27,9 +27,13 @@ An AI-powered SQL Server database operations agent built with [Strands Agents](h
 - **Amazon Bedrock** foundation model access enabled in your region → `AWS_REGION`
 - An **IAM execution role** with permissions for Bedrock, Secrets Manager, SNS, and CloudWatch Logs ([permissions guide](https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/runtime-permissions.html)) → `AGENTCORE_ROLE_ARN`
 
-  Create the role using the included least-privilege policies. Replace `<region>`, `<account-id>`, `<your-secret-name>`, and `<your-topic-name>` in `agentcore-execution-role-policy.json` with your values, then run:
+  Create the role using the included least-privilege policies. The policy template uses your environment variables from step 2:
 
   ```bash
+  export AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
+
+  envsubst < agentcore-execution-role-policy.json > /tmp/policy.json
+
   aws iam create-role \
     --role-name AgentCoreDBOpsRole \
     --assume-role-policy-document file://agentcore-execution-role-trust-policy.json
@@ -37,7 +41,9 @@ An AI-powered SQL Server database operations agent built with [Strands Agents](h
   aws iam put-role-policy \
     --role-name AgentCoreDBOpsRole \
     --policy-name AgentCoreDBOpsPolicy \
-    --policy-document file://agentcore-execution-role-policy.json
+    --policy-document file:///tmp/policy.json
+
+  export AGENTCORE_ROLE_ARN=$(aws iam get-role --role-name AgentCoreDBOpsRole --query 'Role.Arn' --output text)
   ```
 - A **VPC** with private subnets and a security group allowing outbound traffic to RDS on port 1433 → `SUBNET1`, `SUBNET2`, `SECURITY_GROUP_ID`
 
