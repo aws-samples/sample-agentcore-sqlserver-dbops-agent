@@ -1,6 +1,6 @@
 # sample-agentcore-sqlserver-dbops-agent
 
-An AI-powered SQL Server database operations agent built with [Strands Agents](https://github.com/strands-agents/strands-agents) and deployed on [Amazon Bedrock AgentCore Runtime](https://docs.aws.amazon.com/bedrock/latest/userguide/agentcore.html). The agent investigates deadlocks and blocking on Amazon RDS for SQL Server, performs root cause analysis, and sends diagnostic reports via Amazon SNS.
+An AI-powered SQL Server database operations agent built with [Strands Agents](https://github.com/strands-agents/sdk-python) and deployed on [Amazon Bedrock AgentCore Runtime](https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/). The agent investigates deadlocks and blocking on Amazon RDS for SQL Server, performs root cause analysis, and sends diagnostic reports via Amazon SNS.
 
 ## What the agent does
 
@@ -14,23 +14,31 @@ An AI-powered SQL Server database operations agent built with [Strands Agents](h
 
 ## Prerequisites
 
+### Amazon RDS for SQL Server
+
+- An RDS for SQL Server instance (Standard or Enterprise Edition)
+- Trace flags 1204 and 1222 enabled via a custom DB parameter group — see [Monitor deadlocks in Amazon RDS for SQL Server and set notifications using Amazon CloudWatch](https://aws.amazon.com/blogs/database/monitor-deadlocks-in-amazon-rds-for-sql-server-and-set-notifications-using-amazon-cloudwatch/) for setup steps
+- *(Optional)* Custom XE session for `blocked_process_report` for historical blocking — see [Using extended events with Amazon RDS for Microsoft SQL Server](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/SQLServer.ExtendedEvents.html)
+- Database credentials stored in **AWS Secrets Manager** (`host`, `username`, `password`, `port`) → `DB_SECRET_ID`
+- An **Amazon SNS** topic with an active subscription → `SNS_TOPIC_NAME`
+
+### Amazon Bedrock AgentCore
+
+- **Amazon Bedrock** foundation model access enabled in your region → `AWS_REGION`
+- An **IAM execution role** with permissions for Bedrock, Secrets Manager, SNS, and CloudWatch Logs ([permissions guide](https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/runtime-permissions.html)) → `AGENTCORE_ROLE_ARN`
+- A **VPC** with private subnets and a security group allowing outbound traffic to RDS on port 1433 → `SUBNET1`, `SUBNET2`, `SECURITY_GROUP_ID`
+
+### Development environment
+
 - **Python** 3.10+
 - **AWS CLI** configured with appropriate permissions
-- **Amazon RDS for SQL Server** (Standard or Enterprise Edition)
-  - Trace flags 1204 and 1222 enabled via a custom DB parameter group ([setup guide](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Appendix.SQLServer.CommonDBATasks.Deadlocks.html)) — see also [Monitor deadlocks in Amazon RDS for SQL Server and set notifications using Amazon CloudWatch](https://aws.amazon.com/blogs/database/monitor-deadlocks-in-amazon-rds-for-sql-server-and-set-notifications-using-amazon-cloudwatch/)
-  - *(Optional)* Custom XE session for `blocked_process_report` for historical blocking ([Extended Events](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/SQLServer.ExtendedEvents.html))
-- **AWS Secrets Manager** secret containing database credentials (`host`, `username`, `password`, `port`)
-- **Amazon SNS** topic with an active subscription
-- **Amazon Bedrock** foundation model access enabled in your region
-- **IAM execution role** with permissions for Bedrock, Secrets Manager, SNS, and CloudWatch Logs ([permissions guide](https://docs.aws.amazon.com/bedrock/latest/userguide/agentcore-permissions.html))
-- **VPC** with private subnets and a security group allowing outbound traffic to RDS on port 1433
 
 ## Quick start
 
 ### 1. Clone and install
 
 ```bash
-git clone git@github.com:SudhirAmin/sample-agentcore-sqlserver-dbops-agent.git
+git clone https://github.com/aws-samples/sample-agentcore-sqlserver-dbops-agent.git
 cd sample-agentcore-sqlserver-dbops-agent
 
 python3 -m venv .venv
@@ -39,6 +47,7 @@ source .venv/bin/activate
 pip install -r requirements.txt
 pip install bedrock-agentcore-starter-toolkit
 pip install 'urllib3<2' 'chardet<6'
+agentcore --help
 ```
 
 ### 2. Set environment variables
@@ -53,13 +62,7 @@ export SUBNET1=<your-first-private-subnet-id>
 export SUBNET2=<your-second-private-subnet-id>
 ```
 
-### 3. Test locally
-
-```bash
-python agent.py
-```
-
-### 4. Configure for AgentCore deployment
+### 3. Configure for AgentCore deployment
 
 ```bash
 agentcore configure \
@@ -72,7 +75,7 @@ agentcore configure \
   --security-groups $SECURITY_GROUP_ID
 ```
 
-### 5. Deploy
+### 4. Deploy
 
 ```bash
 agentcore deploy \
@@ -82,7 +85,7 @@ agentcore deploy \
   --env AGENT_OBSERVABILITY_ENABLED=true
 ```
 
-### 6. Verify and invoke
+### 5. Verify and invoke
 
 ```bash
 agentcore status
@@ -172,6 +175,9 @@ Deploy with `AGENT_OBSERVABILITY_ENABLED=true` and include `aws-opentelemetry-di
 ├── agent.py                 # Main agent with all tools
 ├── agent_with_memory.py     # Agent with AgentCore Memory integration
 ├── requirements.txt         # Python dependencies
+├── LICENSE                  # MIT-0 License
+├── NOTICE                   # Copyright notice
+├── THIRD-PARTY-LICENSES     # Third-party dependency licenses
 └── README.md
 ```
 
@@ -184,4 +190,4 @@ Deploy with `AGENT_OBSERVABILITY_ENABLED=true` and include `aws-opentelemetry-di
 
 ## License
 
-This project is licensed under the MIT License.
+This project is licensed under the [MIT-0 License](LICENSE).
