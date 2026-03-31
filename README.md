@@ -209,6 +209,10 @@ Deploy with `AGENT_OBSERVABILITY_ENABLED=true` and include `aws-opentelemetry-di
 - The agent runs in your VPC with private subnets
 - Use a dedicated, least-privilege database login for the agent
 
+See [CONTRIBUTING](CONTRIBUTING.md#security-issue-notifications) for more information.
+
 ## License
 
 This project is licensed under the [MIT-0 License](LICENSE).
+
+See [LICENSE](LICENSE) for more information.
