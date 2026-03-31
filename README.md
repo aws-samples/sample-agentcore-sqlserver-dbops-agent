@@ -1,6 +1,64 @@
-# sample-agentcore-sqlserver-dbops-agent
+# Autonomous DBOps: Agentic AI for Maintaining Databases
+
+![License](https://img.shields.io/badge/license-MIT--0-green) ![Python](https://img.shields.io/badge/python-3.10+-blue) ![Status](https://img.shields.io/badge/status-ready-brightgreen)
 
 An AI-powered SQL Server database operations agent built with [Strands Agents](https://github.com/strands-agents/sdk-python) and deployed on [Amazon Bedrock AgentCore Runtime](https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/). The agent investigates deadlocks and blocking on Amazon RDS for SQL Server, performs root cause analysis, and sends diagnostic reports via Amazon SNS.
+
+## How it works
+
+| Step | Description |
+|------|-------------|
+| 1️⃣ Invoke | Operator calls the agent via `agentcore invoke` with a prompt |
+| 2️⃣ Analyze | Agent reasons about symptoms and selects the right diagnostic tools |
+| 3️⃣ Execute | Agent runs `@tool` functions against SQL Server DMVs and Extended Events |
+| 4️⃣ Reason | Claude analyzes deadlock graphs, blocking chains, and session details |
+| 5️⃣ Report | Agent sends findings and recommendations to the DBA team via SNS |
+| 6️⃣ Remember | AgentCore Memory saves facts and session summaries for future recall |
+
+## Architecture
+
+```mermaid
+flowchart TB
+    User[DBA / Operator] --> Agent((DBOps Agent))
+    
+    subgraph Tools[Agent Tools]
+        DL[get_deadlock_graphs]
+        BC[get_blocking_chains]
+        SD[get_session_details]
+        BP[get_blocked_process_reports]
+        SNS[send_diagnostic_report]
+    end
+    
+    subgraph DataSources[SQL Server Data Sources]
+        XE[Extended Events\nsystem_health / blocked_process]
+        DMV[DMVs\ndm_exec_requests\ndm_exec_sessions]
+    end
+    
+    Agent --> Tools
+    DL --> XE
+    BC --> DMV
+    SD --> DMV
+    BP --> XE
+    SNS --> SNSTopic[Amazon SNS]
+    
+    Agent --> MEM[🧠 AgentCore Memory]
+    Agent --> Bedrock[Amazon Bedrock]
+    
+    subgraph Infra[AWS Infrastructure]
+        SM[Secrets Manager]
+        ACR[AgentCore Runtime]
+    end
+    
+    Agent --> Infra
+    
+    style Agent fill:#93C5FD
+    style MEM fill:#93C5FD
+    style Bedrock fill:#93C5FD
+    style Tools fill:#F8F9FA
+    style DataSources fill:#F8F9FA
+    style Infra fill:#F8F9FA
+    style SNSTopic fill:#F8F9FA
+```
 
 ## What the agent does
 
