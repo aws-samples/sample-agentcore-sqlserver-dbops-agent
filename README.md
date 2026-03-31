@@ -1,4 +1,4 @@
-# Autonomous DBOps: Agentic AI for Maintaining Databases
+# Agentic DBOps: Deadlock Root Cause Analysis (RCA) & Alerting for RDS SQL Server with Strands and AgentCore
 
 ![License](https://img.shields.io/badge/license-MIT--0-green) ![Python](https://img.shields.io/badge/python-3.10+-blue) ![Status](https://img.shields.io/badge/status-ready-brightgreen)
 
