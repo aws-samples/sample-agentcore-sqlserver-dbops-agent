@@ -143,7 +143,7 @@ export SUBNET2=<your-second-private-subnet-id>
 
 ```bash
 agentcore configure \
-  --name sqlserver-dbops-agent \
+  --name sqlserver_dbops_agent \
   --entrypoint agent.py \
   --execution-role $AGENTCORE_ROLE_ARN \
   --deployment-type direct_code_deploy \
@@ -191,7 +191,7 @@ agentcore memory create dbops_shared_memory \
 export AGENTCORE_MEMORY_ID=<memory-id-from-above>
 
 agentcore configure \
-  --name sqlserver-dbops-agent \
+  --name sqlserver_dbops_agent \
   --entrypoint agent_with_memory.py \
   --execution-role $AGENTCORE_ROLE_ARN \
   --deployment-type direct_code_deploy \
